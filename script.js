@@ -1,0 +1,107 @@
+const colors = [
+  { name: "Rojo", value: "#ef4444", text: "#ffffff", defaultSelected: true },
+  { name: "Azul", value: "#2563eb", text: "#ffffff", defaultSelected: true },
+  { name: "Amarillo", value: "#facc15", text: "#111827", defaultSelected: true },
+  { name: "Verde", value: "#22c55e", text: "#ffffff" },
+  { name: "Blanco", value: "#ffffff", text: "#111827" },
+  { name: "Negro", value: "#111827", text: "#ffffff" },
+  { name: "Naranja", value: "#f97316", text: "#ffffff" },
+  { name: "Morado", value: "#9333ea", text: "#ffffff" },
+  { name: "Rosa", value: "#ec4899", text: "#ffffff" },
+];
+
+const app = document.querySelector("#app");
+const colorName = document.querySelector("#colorName");
+const menuButton = document.querySelector("#menuButton");
+const colorMenu = document.querySelector("#colorMenu");
+const colorOptions = document.querySelector("#colorOptions");
+
+let selectedColors = colors.filter((color) => color.defaultSelected);
+let currentColor = selectedColors[0];
+
+function renderColorOptions() {
+  colorOptions.innerHTML = "";
+
+  colors.forEach((color) => {
+    const option = document.createElement("label");
+    option.className = "color-option";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.value = color.name;
+    checkbox.checked = selectedColors.includes(color);
+    checkbox.addEventListener("change", () => updateSelectedColors(color, checkbox));
+
+    const swatch = document.createElement("span");
+    swatch.className = "color-swatch";
+    swatch.style.backgroundColor = color.value;
+
+    const label = document.createElement("span");
+    label.className = "color-label";
+    label.textContent = color.name;
+
+    option.append(checkbox, swatch, label);
+    colorOptions.append(option);
+  });
+}
+
+function updateSelectedColors(color, checkbox) {
+  if (checkbox.checked) {
+    selectedColors = [...selectedColors, color];
+  } else if (selectedColors.length > 2) {
+    selectedColors = selectedColors.filter((selectedColor) => selectedColor !== color);
+  } else {
+    checkbox.checked = true;
+  }
+
+  if (!selectedColors.includes(currentColor)) {
+    showRandomColor();
+  }
+}
+
+function showColor(color) {
+  currentColor = color;
+  app.style.backgroundColor = color.value;
+  app.style.color = color.text;
+  colorName.textContent = color.name;
+}
+
+function showRandomColor() {
+  if (selectedColors.length === 1) {
+    showColor(selectedColors[0]);
+    return;
+  }
+
+  const availableColors = selectedColors.filter((color) => color !== currentColor);
+  const nextColor =
+    availableColors[Math.floor(Math.random() * availableColors.length)];
+
+  showColor(nextColor);
+}
+
+function toggleMenu() {
+  const isOpen = !colorMenu.hidden;
+  colorMenu.hidden = isOpen;
+  menuButton.setAttribute("aria-expanded", String(!isOpen));
+}
+
+menuButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  toggleMenu();
+});
+
+colorMenu.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+
+app.addEventListener("click", showRandomColor);
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !colorMenu.hidden) {
+    toggleMenu();
+    menuButton.focus();
+  }
+});
+
+renderColorOptions();
+showColor(currentColor);

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aprender los colores</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="app" class="app" aria-live="polite">
+      <button
+        id="menuButton"
+        class="menu-button"
+        type="button"
+        aria-expanded="false"
+        aria-controls="colorMenu"
+      >
+        Colores
+      </button>
+
+      <section
+        id="colorMenu"
+        class="color-menu"
+        aria-label="Elegir colores"
+        hidden
+      >
+        <h2>Elige colores</h2>
+        <p class="menu-note">Selecciona al menos dos.</p>
+        <div id="colorOptions" class="color-options"></div>
+      </section>
+
+      <div class="color-card">
+        <p class="hint">Toca la pantalla</p>
+        <h1 id="colorName">Rojo</h1>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
