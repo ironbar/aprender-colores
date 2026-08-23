@@ -20,9 +20,29 @@ const colorOptions = document.querySelector("#colorOptions");
 
 let selectedColors = colors.filter((color) => color.defaultSelected);
 let currentColor = selectedColors[0];
+let colorQueue = [];
 
 function formatColorName(color) {
   return color.name.toLocaleUpperCase("es-ES");
+}
+
+function shuffleColors(colorsToShuffle) {
+  const shuffledColors = [...colorsToShuffle];
+
+  for (let index = shuffledColors.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffledColors[index], shuffledColors[randomIndex]] = [
+      shuffledColors[randomIndex],
+      shuffledColors[index],
+    ];
+  }
+
+  return shuffledColors;
+}
+
+function refillColorQueue() {
+  const availableColors = selectedColors.filter((color) => color !== currentColor);
+  colorQueue = shuffleColors(availableColors);
 }
 
 function renderColorOptions() {
@@ -52,13 +72,23 @@ function renderColorOptions() {
 }
 
 function updateSelectedColors(color, checkbox) {
+  let selectionChanged = false;
+
   if (checkbox.checked) {
     selectedColors = [...selectedColors, color];
+    selectionChanged = true;
   } else if (selectedColors.length > 2) {
     selectedColors = selectedColors.filter((selectedColor) => selectedColor !== color);
+    selectionChanged = true;
   } else {
     checkbox.checked = true;
   }
+
+  if (!selectionChanged) {
+    return;
+  }
+
+  colorQueue = [];
 
   if (!selectedColors.includes(currentColor)) {
     showRandomColor();
@@ -73,16 +103,15 @@ function showColor(color) {
 }
 
 function showRandomColor() {
-  if (selectedColors.length === 1) {
-    showColor(selectedColors[0]);
-    return;
+  if (colorQueue.length === 0) {
+    refillColorQueue();
   }
 
-  const availableColors = selectedColors.filter((color) => color !== currentColor);
-  const nextColor =
-    availableColors[Math.floor(Math.random() * availableColors.length)];
+  const nextColor = colorQueue.shift();
 
-  showColor(nextColor);
+  if (nextColor) {
+    showColor(nextColor);
+  }
 }
 
 function toggleMenu() {
