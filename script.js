@@ -16,7 +16,10 @@ const app = document.querySelector("#app");
 const colorName = document.querySelector("#colorName");
 const menuButton = document.querySelector("#menuButton");
 const colorMenu = document.querySelector("#colorMenu");
+const menuActionButton = document.querySelector("#menuActionButton");
 const colorOptions = document.querySelector("#colorOptions");
+
+const primaryColors = colors.filter((color) => color.defaultSelected);
 
 let selectedColors = colors.filter((color) => color.defaultSelected);
 let currentColor = selectedColors[0];
@@ -45,6 +48,16 @@ function refillColorQueue() {
   colorQueue = shuffleColors(availableColors);
 }
 
+function areAllColorsSelected() {
+  return selectedColors.length === colors.length;
+}
+
+function updateMenuActionButton() {
+  menuActionButton.textContent = areAllColorsSelected()
+    ? "Activar solo primarios"
+    : "Activar todos";
+}
+
 function renderColorOptions() {
   colorOptions.innerHTML = "";
 
@@ -71,6 +84,17 @@ function renderColorOptions() {
   });
 }
 
+function setSelectedColors(nextSelectedColors) {
+  selectedColors = nextSelectedColors;
+  colorQueue = [];
+  renderColorOptions();
+  updateMenuActionButton();
+
+  if (!selectedColors.includes(currentColor)) {
+    showRandomColor();
+  }
+}
+
 function updateSelectedColors(color, checkbox) {
   let selectionChanged = false;
 
@@ -89,6 +113,7 @@ function updateSelectedColors(color, checkbox) {
   }
 
   colorQueue = [];
+  updateMenuActionButton();
 
   if (!selectedColors.includes(currentColor)) {
     showRandomColor();
@@ -129,6 +154,10 @@ colorMenu.addEventListener("click", (event) => {
   event.stopPropagation();
 });
 
+menuActionButton.addEventListener("click", () => {
+  setSelectedColors(areAllColorsSelected() ? primaryColors : colors);
+});
+
 app.addEventListener("click", showRandomColor);
 
 document.addEventListener("keydown", (event) => {
@@ -139,4 +168,5 @@ document.addEventListener("keydown", (event) => {
 });
 
 renderColorOptions();
+updateMenuActionButton();
 showColor(currentColor);
