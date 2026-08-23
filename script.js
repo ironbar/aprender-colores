@@ -8,6 +8,8 @@ const colors = [
   { name: "Naranja", value: "#f97316", text: "#ffffff" },
   { name: "Morado", value: "#9333ea", text: "#ffffff" },
   { name: "Rosa", value: "#ec4899", text: "#ffffff" },
+  { name: "Marrón", value: "#92400e", text: "#ffffff" },
+  { name: "Gris", value: "#6b7280", text: "#ffffff" },
 ];
 
 const app = document.querySelector("#app");
