@@ -21,6 +21,10 @@ const colorOptions = document.querySelector("#colorOptions");
 let selectedColors = colors.filter((color) => color.defaultSelected);
 let currentColor = selectedColors[0];
 
+function formatColorName(color) {
+  return color.name.toLocaleUpperCase("es-ES");
+}
+
 function renderColorOptions() {
   colorOptions.innerHTML = "";
 
@@ -40,7 +44,7 @@ function renderColorOptions() {
 
     const label = document.createElement("span");
     label.className = "color-label";
-    label.textContent = color.name;
+    label.textContent = formatColorName(color);
 
     option.append(checkbox, swatch, label);
     colorOptions.append(option);
@@ -65,7 +69,7 @@ function showColor(color) {
   currentColor = color;
   app.style.backgroundColor = color.value;
   app.style.color = color.text;
-  colorName.textContent = color.name;
+  colorName.textContent = formatColorName(color);
 }
 
 function showRandomColor() {
