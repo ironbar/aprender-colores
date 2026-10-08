@@ -21,7 +21,7 @@ const colorOptions = document.querySelector("#colorOptions");
 
 const primaryColors = colors.filter((color) => color.defaultSelected);
 
-let selectedColors = colors.filter((color) => color.defaultSelected);
+let selectedColors = [...colors];
 let currentColor = selectedColors[0];
 let colorQueue = [];
 
@@ -164,7 +164,25 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !colorMenu.hidden) {
     toggleMenu();
     menuButton.focus();
+    return;
   }
+
+  if (
+    event.repeat ||
+    event.ctrlKey ||
+    event.altKey ||
+    event.metaKey ||
+    event.key.length !== 1 ||
+    event.target.closest("button, input, select, textarea, a, [contenteditable]")
+  ) {
+    return;
+  }
+
+  if (event.key === " ") {
+    event.preventDefault();
+  }
+
+  showRandomColor();
 });
 
 renderColorOptions();
